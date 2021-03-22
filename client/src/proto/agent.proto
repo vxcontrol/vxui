@@ -1,0 +1,128 @@
+syntax = "proto2";
+
+package agent;
+
+// Used following communication schema for main module:
+// --------------------------------
+// Agent   -(AUTHENTICATION_REQUEST)-> Server
+// Server  -(AUTHENTICATION_RESPONSE)-> Agent
+// Agent   -(INFORMATION_RESULT)-> Server
+// --------------------------------
+// Server  -(GET_INFORMATION)-> Agent
+// Agent   -(INFORMATION_RESULT)-> Server
+// --------------------------------
+// Server  -(GET_STATUS_MODULES)-> Agent
+// Agent   -(STATUS_MODULES_RESULT)-> Server
+// --------------------------------
+// Browser -(GET_STATUS_MODULES)-> Server
+// Server  -(STATUS_MODULES_RESULT)-> Browser
+// --------------------------------
+// Server  -(START_MODULES)-> Agent
+// Agent   -(STATUS_MODULES_RESULT)-> Server
+// --------------------------------
+// Server  -(STOP_MODULES)-> Agent
+// Agent   -(STATUS_MODULES_RESULT)-> Server
+// --------------------------------
+// Server  -(UPDATE_MODULES)-> Agent
+// Agent   -(STATUS_MODULES_RESULT)-> Server
+// --------------------------------
+//
+// Notes: Sending of information also will be used on connection callback
+// Notes: For GET_INFORMATION command payload should be empty
+// Notes: For GET_STATUS_MODULES command payload should be empty
+//
+
+// Common message protocol
+message Message {
+  enum Type {
+    UNKNOWN = 0;
+    GET_INFORMATION = 1;
+    INFORMATION_RESULT = 2;
+    GET_STATUS_MODULES = 3;
+    STATUS_MODULES_RESULT = 4;
+    START_MODULES = 5;
+    STOP_MODULES = 6;
+    UPDATE_MODULES = 7;
+    AUTHENTICATION_REQUEST = 8;
+    AUTHENTICATION_RESPONSE = 9;
+  }
+
+  required Type type = 1 [default = UNKNOWN];
+  optional bytes payload = 2;
+}
+
+// Struct of authentication request for handshake
+// atoken means agent token which is last stored value on agent side
+message AuthenticationRequest {
+  required int64 timestamp = 1;
+  required string atoken = 2;
+}
+
+// Struct of authentication request for handshake
+// atoken means agent token which will use for send API function from server
+// stoken means server token which will use for send API function from agent
+message AuthenticationResponse {
+  required string atoken = 1;
+  required string stoken = 2;
+}
+
+// Struct of module for loading into agent
+message Module {
+  message File {
+    optional string path = 1;
+    required bytes data = 2;
+  }
+
+  message Arg {
+    required string key = 1;
+    repeated string value = 2;
+  }
+
+  required string name = 1;
+  optional string version = 2;
+  repeated File files = 3;
+  repeated Arg args = 4;
+}
+
+// Communication message for (START_MODULES | STOP_MODULES | UPDATE_MODULES) commands
+message ModuleList {
+  repeated Module list = 1;
+}
+
+// Struct of status module for sending to server
+message ModuleStatus {
+  required string name = 1;
+  required string version = 2;
+  
+  enum Status {
+    UNKNOWN = 0;
+    LOADED = 1;
+    RUNNING = 2;
+    STOPPED = 3;
+    FREED = 4;
+  }
+
+  required Status status = 3 [default = UNKNOWN];
+}
+
+// Communication message for STATUS_MODULES_RESULT command
+message ModuleStatusList {
+  repeated ModuleStatus list = 1;
+}
+
+// Communication message for INFORMATION_RESULT command
+message Information {
+  message OS {
+    required string type = 1;
+    optional string name = 2;
+    required string arch = 3;
+  }
+
+  message User {
+    required string name = 1;
+    optional string group = 2;
+  }
+
+  required OS os = 1;
+  required User user = 2;
+}

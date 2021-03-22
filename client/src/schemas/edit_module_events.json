@@ -1,0 +1,443 @@
+{
+    "type": "object",
+    "properties": {
+        "event_data_schema": {
+            "type": "array",
+            "ui": {
+                "label": "Data schema",
+                "description": "\u200B",
+                "legend": "Data schema",
+                "widget": "array-tabs",
+                "showIdxLabel": false,
+                "widgetConfig": {
+                    "collapsed": true,
+                    "requiredDelConfirm": true
+                }
+            },
+            "rules": {},
+            "items": {
+                "type": "object",
+                "properties": {
+                    "required": {
+                        "type": "boolean",
+                        "default": false,
+                        "ui": {
+                            "label": "Required",
+                            "widget": "checkbox",
+                            "widgetConfig": {}
+                        },
+                        "rules": {}
+                    },
+                    "name": {
+                        "type": "string",
+                        "ui": {
+                            "label": "Name",
+                            "description": "Please type event data key without spaces or complex value e.g. user.name",
+                            "placeholder": "dx: 'key_' + (parseInt(idxChain)+1)",
+                            "widget": "input",
+                            "widgetConfig": {}
+                        },
+                        "rules": {
+                            "required": {
+                                "value": true,
+                                "errMsg": "Is required field"
+                            },
+                            "customRule": [
+                                {
+                                    "script": "dx: !!({{$root.event_data_schema[i].name}}.match(/^[\\.a-zA-Z0-9_]*$/))",
+                                    "errMsg": "Event data key name must contain alpha numeric charset and '_'"
+                                }
+                            ]
+                        }
+                    },
+                    "type": {
+                        "type": "string",
+                        "default": "string",
+                        "ui": {
+                            "label": "Type",
+                            "description": "Please choose event data key type",
+                            "widget": "select",
+                            "widgetConfig": {
+                                "clearable": false,
+                                "enumSource": [
+                                    {
+                                        "label": "string",
+                                        "value": "string"
+                                    },
+                                    {
+                                        "label": "boolean",
+                                        "value": "boolean"
+                                    },
+                                    {
+                                        "label": "number",
+                                        "value": "number"
+                                    },
+                                    {
+                                        "label": "integer",
+                                        "value": "integer"
+                                    },
+                                    {
+                                        "label": "object",
+                                        "value": "object"
+                                    },
+                                    {
+                                        "label": "array",
+                                        "value": "array"
+                                    },
+                                    {
+                                        "label": "none",
+                                        "value": "none"
+                                    }
+                                ]
+                            }
+                        },
+                        "rules": {
+                            "required": {
+                                "value": true,
+                                "errMsg": "Is required field"
+                            },
+                            "customRule": [
+                                {
+                                    "script": "dx: ((val, type) => { try { const d = JSON.parse(val).default; if (d === undefined) { return true }; const t = typeof(d); switch(type) { case 'boolean':; case 'string':; case 'number': return t === type; case 'integer': return Number.isInteger(d); case 'object': return t === type && !Array.isArray(d); case 'array': return t === 'object' && Array.isArray(d); case 'none': return true; default: return false } } catch(e) { return false } })({{$root.event_data_schema[i].fields}}, {{$root.event_data_schema[i].type}})",
+                                    "errMsg": "Event data key default value must be same type",
+                                    "linkItems": [
+                                        {
+                                            "fieldPath": "event_data_schema[i].fields",
+                                            "customRuleIdx": 1
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "fields": {
+                        "type": "string",
+                        "default": "{\n  \"rules\": {},\n  \"ui\": {\n    \"widgetConfig\": {}\n  }\n}",
+                        "ui": {
+                            "label": "Additional",
+                            "description": "Please type event data additional keys in JSON format",
+                            "widget": "textarea",
+                            "widgetConfig": {
+                                "rows": 3,
+                                "autoSize": {
+                                    "minRows": 2,
+                                    "maxRows": 6
+                                }
+                            }
+                        },
+                        "rules": {
+                            "required": {
+                                "value": true,
+                                "errMsg": "Is required field"
+                            },
+                            "customRule": [
+                                {
+                                    "script": "dx: ((val) => { try { const v = JSON.parse(val); return typeof(v) === 'object' && !Array.isArray(v) } catch(e) { return false } })({{$root.event_data_schema[i].fields}})",
+                                    "errMsg": "Event data key additional fields must be valid JSON"
+                                },
+                                {
+                                    "script": "dx: ((val, type) => { try { const d = JSON.parse(val).default; if (d === undefined) { return true }; const t = typeof(d); switch(type) { case 'boolean':; case 'string':; case 'number': return t === type; case 'integer': return Number.isInteger(d); case 'object': return t === type && !Array.isArray(d); case 'array': return t === 'object' && Array.isArray(d); case 'none': return true; default: return false } } catch(e) { return false } })({{$root.event_data_schema[i].fields}}, {{$root.event_data_schema[i].type}})",
+                                    "errMsg": "Event data key default value must be same type",
+                                    "linkItems": [
+                                        {
+                                            "fieldPath": "event_data_schema[i].type",
+                                            "customRuleIdx": 0
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "ui": {
+                    "label": "dx: {{$root.event_data_schema[i].name}} ? ({{$root.event_data_schema[i].required}} ? '*' : '') + {{$root.event_data_schema[i].name}} : 'key_' + (parseInt(idxChain)+1)"
+                }
+            }
+        },
+        "event_config_schema": {
+            "type": "array",
+            "ui": {
+                "label": "Config schema",
+                "legend": "Config schema",
+                "widget": "array",
+                "showLabel": true,
+                "showLegend": true,
+                "showIdxLabel": false,
+                "widgetConfig": {
+                    "collapsed": true,
+                    "itemCollapse": true,
+                    "disableReorder": true,
+                    "requiredDelConfirm": true
+                }
+            },
+            "rules": {},
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "ui": {
+                            "label": "Event ID",
+                            "description": "Please type event ID without spaces",
+                            "placeholder": "dx: 'event_' + (parseInt(idxChain)+1)",
+                            "widget": "input",
+                            "widgetConfig": {}
+                        },
+                        "rules": {
+                            "required": {
+                                "value": true,
+                                "errMsg": "Is required field"
+                            },
+                            "customRule": [
+                                {
+                                    "script": "dx: !!({{$root.event_config_schema[i].id}}.match(/^[a-zA-Z0-9_]*$/))",
+                                    "errMsg": "Event ID name must contain alpha numeric charset and '_'"
+                                }
+                            ]
+                        }
+                    },
+                    "type": {
+                        "type": "string",
+                        "default": "{\"$ref\":\"#/definitions/events.atomic\"}",
+                        "ui": {
+                            "widget": "select",
+                            "label": "Event type",
+                            "description": "Please select event type from list",
+                            "showLabel": true,
+                            "showIdxLabel": false,
+                            "showLegend": false,
+                            "widgetConfig": {
+                                "clearable": false,
+                                "enumSource": [
+                                    {
+                                        "label": "atomic",
+                                        "value": "{\"$ref\":\"#/definitions/events.atomic\"}"
+                                    },
+                                    {
+                                        "label": "aggregation",
+                                        "value": "{\"$ref\":\"#/definitions/events.aggregation\"}"
+                                    },
+                                    {
+                                        "label": "correlation",
+                                        "value": "{\"$ref\":\"#/definitions/events.correlation\"}"
+                                    }
+                                ]
+                            }
+                        },
+                        "rules": {
+                            "required": {
+                                "value": true,
+                                "errMsg": "Is required field"
+                            },
+                            "customRule": [
+                                {
+                                    "script": "dx: !({{$root.event_config_schema[i].type}} !== '{\"$ref\":\"#/definitions/events.atomic\"}' && {{$root.event_config_schema[i].fields}} !== '{}')",
+                                    "errMsg": "Event extra keys must be empty object ('{}') for aggregation or correlation type"
+                                },
+                                {
+                                    "script": "dx: !({{$root.event_config_schema[i].type}} !== '{\"$ref\":\"#/definitions/events.atomic\"}' && {{$root.event_config_schema[i].keys}}.length !== 0)",
+                                    "errMsg": "Event config keys must be empty list for aggregation or correlation type"
+                                }
+                            ]
+                        }
+                    },
+                    "fields": {
+                        "type": "string",
+                        "default": "{}",
+                        "ui": {
+                            "widget": "textarea",
+                            "hidden": "dx: {{$root.event_config_schema[i].type}} !== '{\"$ref\":\"#/definitions/events.atomic\"}'",
+                            "label": "Event extra keys",
+                            "description": "Please type event extra keys in JSON format",
+                            "widgetConfig": {
+                                "rows": 2,
+                                "autoSize": {
+                                    "minRows": 2,
+                                    "maxRows": 6
+                                }
+                            }
+                        },
+                        "rules": {
+                            "required": {
+                                "value": true,
+                                "errMsg": "Is required field"
+                            },
+                            "customRule": [
+                                {
+                                    "script": "dx: ((val) => { try { const v = JSON.parse(val); return typeof(v) === 'object' && !Array.isArray(v) } catch(e) { return false } })({{$root.event_config_schema[i].fields}})",
+                                    "errMsg": "Event extra keys must be valid JSON"
+                                }
+                            ]
+                        }
+                    },
+                    "keys": {
+                        "type": "array",
+                        "ui": {
+                            "widget": "array-tabs",
+                            "hidden": "dx: {{$root.event_config_schema[i].type}} !== '{\"$ref\":\"#/definitions/events.atomic\"}'",
+                            "label": "Event config keys",
+                            "showLabel": true,
+                            "showIdxLabel": false,
+                            "showLegend": false,
+                            "widgetConfig": {
+                                "requiredDelConfirm": true
+                            }
+                        },
+                        "rules": {},
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "required": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "ui": {
+                                        "label": "Required",
+                                        "widget": "checkbox",
+                                        "widgetConfig": {}
+                                    },
+                                    "rules": {}
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "ui": {
+                                        "label": "Name",
+                                        "description": "Please type event config key without spaces or complex value e.g. server.ip",
+                                        "placeholder": "dx: 'key_' + (parseInt(idxChain.split(',')[1])+1)",
+                                        "widget": "input",
+                                        "widgetConfig": {}
+                                    },
+                                    "rules": {
+                                        "required": {
+                                            "value": true,
+                                            "errMsg": "Is required field"
+                                        },
+                                        "customRule": [
+                                            {
+                                                "script": "dx: !!({{$root.event_config_schema[i].keys[i].name}}.match(/^[\\.a-zA-Z0-9_]*$/))",
+                                                "errMsg": "Event config key name must contain alpha numeric charset and '_'"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "default": "string",
+                                    "ui": {
+                                        "label": "Type",
+                                        "description": "Please choose event config key type",
+                                        "widget": "select",
+                                        "widgetConfig": {
+                                            "clearable": false,
+                                            "enumSource": [
+                                                {
+                                                    "label": "string",
+                                                    "value": "string"
+                                                },
+                                                {
+                                                    "label": "boolean",
+                                                    "value": "boolean"
+                                                },
+                                                {
+                                                    "label": "number",
+                                                    "value": "number"
+                                                },
+                                                {
+                                                    "label": "integer",
+                                                    "value": "integer"
+                                                },
+                                                {
+                                                    "label": "object",
+                                                    "value": "object"
+                                                },
+                                                {
+                                                    "label": "array",
+                                                    "value": "array"
+                                                },
+                                                {
+                                                    "label": "none",
+                                                    "value": "none"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "rules": {
+                                        "required": {
+                                            "value": true,
+                                            "errMsg": "Is required field"
+                                        },
+                                        "customRule": [
+                                            {
+                                                "script": "dx: ((val, type) => { try { const d = JSON.parse(val).default; if (d === undefined) { return true }; const t = typeof(d); switch(type) { case 'boolean':; case 'string':; case 'number': return t === type; case 'integer': return Number.isInteger(d); case 'object': return t === type && !Array.isArray(d); case 'array': return t === 'object' && Array.isArray(d); case 'none': return true; default: return false } } catch(e) { return false } })({{$root.event_config_schema[i].keys[i].fields}}, {{$root.event_config_schema[i].keys[i].type}})",
+                                                "errMsg": "Event config key default value must be same type",
+                                                "linkItems": [
+                                                    {
+                                                        "fieldPath": "event_config_schema[i].keys[i].fields",
+                                                        "customRuleIdx": 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                "fields": {
+                                    "type": "string",
+                                    "default": "{\n  \"rules\": {},\n  \"ui\": {\n    \"widgetConfig\": {}\n  }\n}",
+                                    "ui": {
+                                        "label": "Additional",
+                                        "description": "Please type event config additional keys in JSON format",
+                                        "widget": "textarea",
+                                        "widgetConfig": {
+                                            "rows": 3,
+                                            "autoSize": {
+                                                "minRows": 2,
+                                                "maxRows": 6
+                                            }
+                                        }
+                                    },
+                                    "rules": {
+                                        "required": {
+                                            "value": true,
+                                            "errMsg": "Is required field"
+                                        },
+                                        "customRule": [
+                                            {
+                                                "script": "dx: ((val) => { try { const v = JSON.parse(val); return typeof(v) === 'object' && !Array.isArray(v) } catch(e) { return false } })({{$root.event_config_schema[i].keys[i].fields}})",
+                                                "errMsg": "Event config key additional fields must be valid JSON"
+                                            },
+                                            {
+                                                "script": "dx: ((val, type) => { try { const d = JSON.parse(val).default; if (d === undefined) { return true }; const t = typeof(d); switch(type) { case 'boolean':; case 'string':; case 'number': return t === type; case 'integer': return Number.isInteger(d); case 'object': return t === type && !Array.isArray(d); case 'array': return t === 'object' && Array.isArray(d); case 'none': return true; default: return false } } catch(e) { return false } })({{$root.event_config_schema[i].keys[i].fields}}, {{$root.event_config_schema[i].keys[i].type}})",
+                                                "errMsg": "Event config key default value must be same type",
+                                                "linkItems": [
+                                                    {
+                                                        "fieldPath": "event_config_schema[i].keys[i].type",
+                                                        "customRuleIdx": 0
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "ui": {
+                                "label": "dx: {{$root.event_config_schema[i].keys[i].name}} ? ({{$root.event_config_schema[i].keys[i].required}} ? '*' : '') + {{$root.event_config_schema[i].keys[i].name}} : 'key_' + (parseInt(idxChain.split(',')[1])+1)"
+                            }
+                        }
+                    }
+                },
+                "ui": {
+                    "label": "dx: {{$root.event_config_schema[i].id}} ? {{$root.event_config_schema[i].id}} : 'event_' + (parseInt(idxChain)+1)",
+                    "showLegend": true,
+                    "widgetConfig": {
+                        "layout": "v"
+                    }
+                },
+                "rules": {}
+            }
+        }
+    },
+    "ui": {
+        "showLabel": false,
+        "showLegend": false,
+        "widgetConfig": {}
+    }
+}

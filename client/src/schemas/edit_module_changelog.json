@@ -1,0 +1,107 @@
+{
+    "type": "object",
+    "definitions": {
+        "title": {
+            "type": "string",
+            "ui": {
+                "readonly": "dx: {{$root.changelog[i].ver}} !== {{$root.current}}"
+            },
+            "rules": {
+                "required": true
+            }
+        },
+        "description": {
+            "type": "string",
+            "ui": {
+                "widget": "textarea",
+                "readonly": "dx: {{$root.changelog[i].ver}} !== {{$root.current}}"
+            },
+            "rules": {
+                "required": true
+            }
+        },
+        "overview": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "$ref": "#/definitions/title"
+                },
+                "description": {
+                    "$ref": "#/definitions/description"
+                }
+            },
+            "ui": {
+                "showLegend": false
+            },
+            "rules": {}
+        }
+    },
+    "properties": {
+        "current": {
+            "type": "string",
+            "ui": {
+                "hidden": true
+            },
+            "rules": {}
+        },
+        "changelog": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "ver": {
+                        "type": "string",
+                        "ui": {
+                            "hidden": true
+                        },
+                        "rules": {}
+                    },
+                    "date": {
+                        "type": "string",
+                        "ui": {
+                            "widget": "date-picker",
+                            "readonly": "dx: {{$root.changelog[i].ver}} !== {{$root.current}}"
+                        },
+                        "rules": {}
+                    },
+                    "desc": {
+                        "type": "object",
+                        "properties": {
+                            "en": {
+                                "$ref": "#/definitions/overview"
+                            },
+                            "ru": {
+                                "$ref": "#/definitions/overview"
+                            }
+                        },
+                        "ui": {
+                            "showLabel": false,
+                            "showLegend": false,
+                            "noLabelSpace": true
+                        },
+                        "rules": {}
+                    }
+                },
+                "ui": {
+                    "label": "dx: ((ver, cur) => ver ? ver + (ver === cur ? ' - current' : '') : 'version_' + (parseInt(idxChain)+1))(__get({{$root}}, {{$path}} + '.ver'), {{$root.current}})"
+                },
+                "rules": {}
+            },
+            "ui": {
+                "showLabel": false,
+                "showLegend": false,
+                "showIdxLabel": false,
+                "noLabelSpace": true,
+                "widgetConfig": {
+                    "disableAdd": true,
+                    "disableDel": true,
+                    "disableReorder": true,
+                    "itemCollapse": true
+                }
+            },
+            "rules": {}
+        }
+    },
+    "ui": {},
+    "rules": {}
+}

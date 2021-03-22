@@ -1,0 +1,162 @@
+{
+    "type": "object",
+    "properties": {
+        "config_schema": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "required": {
+                        "type": "boolean",
+                        "default": false,
+                        "ui": {
+                            "widget": "checkbox",
+                            "label": "Required",
+                            "widgetConfig": {}
+                        },
+                        "rules": {}
+                    },
+                    "name": {
+                        "type": "string",
+                        "ui": {
+                            "widget": "input",
+                            "label": "Name",
+                            "description": "Please type config key without spaces or complex value e.g. user.name",
+                            "placeholder": "dx: 'key_' + (parseInt(idxChain)+1)",
+                            "widgetConfig": {}
+                        },
+                        "rules": {
+                            "required": {
+                                "value": true,
+                                "errMsg": "Is required field"
+                            },
+                            "customRule": [
+                                {
+                                    "script": "dx: !!({{$root.config_schema[i].name}}.match(/^[\\.a-zA-Z0-9_]*$/))",
+                                    "errMsg": "Config key name must contain alpha numeric charset and '_'"
+                                }
+                            ]
+                        }
+                    },
+                    "type": {
+                        "type": "string",
+                        "default": "string",
+                        "ui": {
+                            "widget": "select",
+                            "label": "Type",
+                            "description": "Please choose config key type",
+                            "widgetConfig": {
+                                "clearable": false,
+                                "enumSource": [
+                                    {
+                                        "label": "string",
+                                        "value": "string"
+                                    },
+                                    {
+                                        "label": "boolean",
+                                        "value": "boolean"
+                                    },
+                                    {
+                                        "label": "number",
+                                        "value": "number"
+                                    },
+                                    {
+                                        "label": "integer",
+                                        "value": "integer"
+                                    },
+                                    {
+                                        "label": "object",
+                                        "value": "object"
+                                    },
+                                    {
+                                        "label": "array",
+                                        "value": "array"
+                                    },
+                                    {
+                                        "label": "none",
+                                        "value": "none"
+                                    }
+                                ]
+                            }
+                        },
+                        "rules": {
+                            "required": {
+                                "value": true,
+                                "errMsg": "Is required field"
+                            },
+                            "customRule": [
+                                {
+                                    "script": "dx: ((val, type) => { try { const d = JSON.parse(val).default; if (d === undefined) { return true }; const t = typeof(d); switch(type) { case 'boolean':; case 'string':; case 'number': return t === type; case 'integer': return Number.isInteger(d); case 'object': return t === type && !Array.isArray(d); case 'array': return t === 'object' && Array.isArray(d); case 'none': return true; default: return false } } catch(e) { return false } })({{$root.config_schema[i].fields}}, {{$root.config_schema[i].type}})",
+                                    "errMsg": "Config key default value must be same type",
+                                    "linkItems": [
+                                        {
+                                            "fieldPath": "config_schema[i].fields",
+                                            "customRuleIdx": 1
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "fields": {
+                        "type": "string",
+                        "default": "{\n  \"rules\": {},\n  \"ui\": {\n    \"widgetConfig\": {}\n  }\n}",
+                        "ui": {
+                            "widget": "textarea",
+                            "label": "Additional",
+                            "description": "Please type config additional keys in JSON format",
+                            "widgetConfig": {
+                                "rows": 3,
+                                "autoSize": {
+                                    "minRows": 2,
+                                    "maxRows": 6
+                                }
+                            }
+                        },
+                        "rules": {
+                            "required": {
+                                "value": true,
+                                "errMsg": "Is required field"
+                            },
+                            "customRule": [
+                                {
+                                    "script": "dx: ((val) => { try { const v = JSON.parse(val); return typeof(v) === 'object' && !Array.isArray(v) } catch(e) { return false } })({{$root.config_schema[i].fields}})",
+                                    "errMsg": "Config key additional fields must be valid JSON"
+                                },
+                                {
+                                    "script": "dx: ((val, type) => { try { const d = JSON.parse(val).default; if (d === undefined) { return true }; const t = typeof(d); switch(type) { case 'boolean':; case 'string':; case 'number': return t === type; case 'integer': return Number.isInteger(d); case 'object': return t === type && !Array.isArray(d); case 'array': return t === 'object' && Array.isArray(d); case 'none': return true; default: return false } } catch(e) { return false } })({{$root.config_schema[i].fields}}, {{$root.config_schema[i].type}})",
+                                    "errMsg": "Config key default value must be same type",
+                                    "linkItems": [
+                                        {
+                                            "fieldPath": "config_schema[i].type",
+                                            "customRuleIdx": 0
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "ui": {
+                    "label": "dx: {{$root.config_schema[i].name}} ? ({{$root.config_schema[i].required}} ? '*' : '') + {{$root.config_schema[i].name}} : 'key_' + (parseInt(idxChain)+1)"
+                }
+            },
+            "ui": {
+                "widget": "array-tabs",
+                "label": "Schema",
+                "legend": "Config schema",
+                "showIdxLabel": false,
+                "widgetConfig": {
+                    "collapsed": true,
+                    "requiredDelConfirm": true
+                }
+            },
+            "rules": {}
+        }
+    },
+    "ui": {
+        "showLabel": false,
+        "showLegend": false,
+        "widgetConfig": {}
+    }
+}

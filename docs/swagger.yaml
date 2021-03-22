@@ -1,0 +1,1528 @@
+basePath: /api/v1
+definitions:
+  ErrorResponse:
+    properties:
+      msg:
+        example: error message text
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  SuccessResponse:
+    properties:
+      data:
+        type: object
+      status:
+        example: success
+        type: string
+    type: object
+  models.Agent:
+    properties:
+      connected_date:
+        type: string
+      created_date:
+        type: string
+      description:
+        type: string
+      hash:
+        type: string
+      id:
+        type: integer
+      info:
+        $ref: '#/definitions/models.AgentInfo'
+      ip:
+        type: string
+      status:
+        type: string
+    required:
+    - description
+    - hash
+    - info
+    - ip
+    - status
+    type: object
+  models.AgentInfo:
+    properties:
+      os:
+        $ref: '#/definitions/models.AgentOS'
+      user:
+        $ref: '#/definitions/models.AgentUser'
+    required:
+    - os
+    - user
+    type: object
+  models.AgentOS:
+    properties:
+      arch:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    required:
+    - arch
+    - name
+    - type
+    type: object
+  models.AgentUser:
+    properties:
+      group:
+        type: string
+      name:
+        type: string
+    required:
+    - group
+    - name
+    type: object
+  models.Changelog:
+    additionalProperties:
+      additionalProperties:
+        $ref: '#/definitions/models.ChangelogDesc'
+      type: object
+    type: object
+  models.ChangelogDesc:
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      title:
+        type: string
+    required:
+    - date
+    - description
+    - title
+    type: object
+  models.Event:
+    properties:
+      agent_id:
+        type: integer
+      date:
+        type: string
+      id:
+        type: integer
+      info:
+        $ref: '#/definitions/models.EventInfo'
+      module_id:
+        type: integer
+    required:
+    - info
+    type: object
+  models.EventConfig:
+    additionalProperties:
+      $ref: '#/definitions/models.EventConfigItem'
+    type: object
+  models.EventConfigAction:
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+    required:
+    - name
+    - type
+    type: object
+  models.EventConfigItem:
+    properties:
+      actions:
+        items:
+          $ref: '#/definitions/models.EventConfigAction'
+        type: array
+      group_by:
+        items:
+          type: string
+        type: array
+      max_count:
+        type: integer
+      max_time:
+        type: integer
+      seq:
+        items:
+          $ref: '#/definitions/models.EventConfigSeq'
+        type: array
+      type:
+        type: string
+    required:
+    - actions
+    - seq
+    - type
+    type: object
+  models.EventConfigSeq:
+    properties:
+      min_count:
+        type: integer
+      name:
+        type: string
+    required:
+    - min_count
+    - name
+    type: object
+  models.EventInfo:
+    properties:
+      data:
+        additionalProperties: true
+        type: object
+      name:
+        type: string
+      time:
+        type: integer
+      uniq:
+        type: string
+    required:
+    - data
+    - name
+    - uniq
+    type: object
+  models.Group:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  models.Locale:
+    properties:
+      config:
+        additionalProperties:
+          additionalProperties:
+            $ref: '#/definitions/models.LocaleDesc'
+          type: object
+        type: object
+      event_config:
+        additionalProperties:
+          additionalProperties:
+            additionalProperties:
+              $ref: '#/definitions/models.LocaleDesc'
+            type: object
+          type: object
+        type: object
+      event_data:
+        additionalProperties:
+          additionalProperties:
+            $ref: '#/definitions/models.LocaleDesc'
+          type: object
+        type: object
+      events:
+        additionalProperties:
+          additionalProperties:
+            $ref: '#/definitions/models.LocaleDesc'
+          type: object
+        type: object
+      module:
+        additionalProperties:
+          $ref: '#/definitions/models.LocaleDesc'
+        type: object
+      tags:
+        additionalProperties:
+          additionalProperties:
+            $ref: '#/definitions/models.LocaleDesc'
+          type: object
+        type: object
+    required:
+    - config
+    - event_config
+    - event_data
+    - events
+    - module
+    - tags
+    type: object
+  models.LocaleDesc:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    required:
+    - description
+    - title
+    type: object
+  models.ModuleA:
+    properties:
+      agent_id:
+        type: integer
+      changelog:
+        $ref: '#/definitions/models.Changelog'
+      config_schema:
+        type: object
+      current_config:
+        $ref: '#/definitions/models.ModuleConfig'
+      current_event_config:
+        $ref: '#/definitions/models.EventConfig'
+      default_config:
+        $ref: '#/definitions/models.ModuleConfig'
+      default_event_config:
+        $ref: '#/definitions/models.EventConfig'
+      event_config_schema:
+        type: object
+      event_data_schema:
+        type: object
+      id:
+        type: integer
+      info:
+        $ref: '#/definitions/models.ModuleInfo'
+      join_date:
+        type: string
+      last_update:
+        type: string
+      locale:
+        $ref: '#/definitions/models.Locale'
+      status:
+        type: string
+    required:
+    - changelog
+    - config_schema
+    - current_config
+    - current_event_config
+    - default_config
+    - default_event_config
+    - event_config_schema
+    - event_data_schema
+    - info
+    - locale
+    - status
+    type: object
+  models.ModuleConfig:
+    additionalProperties: true
+    type: object
+  models.ModuleInfo:
+    properties:
+      events:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      os:
+        additionalProperties:
+          items:
+            type: string
+          type: array
+        type: object
+      system:
+        type: boolean
+      tags:
+        items:
+          type: string
+        type: array
+      template:
+        type: string
+      version:
+        type: string
+    required:
+    - name
+    - os
+    - template
+    - version
+    type: object
+  models.ModuleS:
+    properties:
+      changelog:
+        $ref: '#/definitions/models.Changelog'
+      config_schema:
+        type: object
+      default_config:
+        $ref: '#/definitions/models.ModuleConfig'
+      default_event_config:
+        $ref: '#/definitions/models.EventConfig'
+      event_config_schema:
+        type: object
+      event_data_schema:
+        type: object
+      id:
+        type: integer
+      info:
+        $ref: '#/definitions/models.ModuleInfo'
+      last_update:
+        type: string
+      locale:
+        $ref: '#/definitions/models.Locale'
+      service_type:
+        type: string
+      tenant_id:
+        type: integer
+    required:
+    - changelog
+    - config_schema
+    - default_config
+    - default_event_config
+    - event_config_schema
+    - event_data_schema
+    - info
+    - locale
+    type: object
+  models.Password:
+    properties:
+      confirm_password:
+        type: string
+      current_password:
+        type: string
+      password:
+        type: string
+    required:
+    - current_password
+    - password
+    type: object
+  models.ServiceInfoServer:
+    properties:
+      host:
+        type: string
+      port:
+        type: integer
+    required:
+    - host
+    - port
+    type: object
+  models.SignIn:
+    properties:
+      mail:
+        type: string
+      password:
+        type: string
+      token:
+        type: string
+    required:
+    - mail
+    - password
+    type: object
+  models.SignUp:
+    properties:
+      confirm_password:
+        type: string
+      mail:
+        type: string
+      password:
+        type: string
+      token:
+        type: string
+    required:
+    - mail
+    - password
+    type: object
+  models.Tenant:
+    properties:
+      id:
+        type: integer
+      status:
+        type: string
+    required:
+    - status
+    type: object
+  models.User:
+    properties:
+      group_id:
+        type: integer
+      id:
+        type: integer
+      mail:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      tenant_id:
+        type: integer
+    required:
+    - mail
+    - status
+    type: object
+  models.UserGroup:
+    properties:
+      group:
+        $ref: '#/definitions/models.Group'
+      group_id:
+        type: integer
+      id:
+        type: integer
+      mail:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      tenant_id:
+        type: integer
+    required:
+    - mail
+    - status
+    type: object
+  private.agent:
+    properties:
+      agent:
+        $ref: '#/definitions/models.Agent'
+      details:
+        $ref: '#/definitions/private.agentDetails'
+    type: object
+  private.agentDetails:
+    properties:
+      active_modules:
+        type: integer
+      events_per_last_day:
+        type: integer
+      hash:
+        type: string
+    type: object
+  private.agentInfo:
+    properties:
+      arch:
+        default: amd64
+        enum:
+        - "386"
+        - amd64
+        type: string
+      name:
+        type: string
+      os:
+        default: linux
+        enum:
+        - windows
+        - linux
+        - darwin
+        type: string
+    required:
+    - arch
+    - name
+    - os
+    type: object
+  private.agentModuleDetails:
+    properties:
+      active:
+        type: boolean
+      name:
+        type: string
+      today:
+        type: integer
+      total:
+        type: integer
+      update:
+        type: boolean
+    type: object
+  private.agentModulePatch:
+    properties:
+      action:
+        default: update
+        description: Action on agent module must be one of activate, deactivate, update, store
+        enum:
+        - activate
+        - deactivate
+        - store
+        - update
+        type: string
+      module:
+        $ref: '#/definitions/models.ModuleA'
+    required:
+    - action
+    type: object
+  private.agentModules:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/private.agentModuleDetails'
+        type: array
+      modules:
+        items:
+          $ref: '#/definitions/models.ModuleA'
+        type: array
+    type: object
+  private.agents:
+    properties:
+      agents:
+        items:
+          $ref: '#/definitions/models.Agent'
+        type: array
+      details:
+        items:
+          $ref: '#/definitions/private.agentDetails'
+        type: array
+    type: object
+  private.events:
+    properties:
+      events:
+        items:
+          $ref: '#/definitions/models.Event'
+        type: array
+      total:
+        type: integer
+    type: object
+  private.systemModuleFile:
+    properties:
+      data:
+        default: base64
+        type: string
+      path:
+        type: string
+    required:
+    - data
+    - path
+    type: object
+  private.systemModuleFilePatch:
+    properties:
+      action:
+        default: save
+        enum:
+        - move
+        - remove
+        - save
+        type: string
+      data:
+        default: base64
+        type: string
+      newpath:
+        type: string
+      path:
+        type: string
+    required:
+    - action
+    - path
+    type: object
+  public.info:
+    properties:
+      group:
+        $ref: '#/definitions/models.Group'
+      recaptcha_html_key:
+        type: string
+      server:
+        $ref: '#/definitions/models.ServiceInfoServer'
+      tenant:
+        $ref: '#/definitions/models.Tenant'
+      type:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+    type: object
+info:
+  contact:
+    email: admin@vxcontrol.com
+    name: Dmitry Nagibin
+    url: https://vxcontrol.com
+  description: Swagger API for VXControl backend product.
+  license:
+    name: Proprietary License
+    url: https://github.com/vxcontrol/vxui/src/master/LICENSE
+  termsOfService: http://swagger.io/terms/
+  title: VXUI Swagger API
+  version: "1.0"
+paths:
+  /agents/:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: agents list received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/private.agents'
+              type: object
+        "403":
+          description: getting agents not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: agents not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve agents list
+      tags:
+      - Agents
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: agent info to create one
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/private.agentInfo'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: agent created successful
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        "400":
+          description: invalid agent info
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "403":
+          description: creating agent not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Create new agent in service
+      tags:
+      - Agents
+  /agents/{hash}:
+    delete:
+      parameters:
+      - description: agent hash in hex format (md5)
+        in: path
+        maxLength: 32
+        minLength: 32
+        name: hash
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: agent deleted successful
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        "403":
+          description: deleting agent not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: agent not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Delete agent from instance DB
+      tags:
+      - Agents
+    get:
+      parameters:
+      - description: agent hash in hex format (md5)
+        in: path
+        maxLength: 32
+        minLength: 32
+        name: hash
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: agent info received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/private.agent'
+              type: object
+        "403":
+          description: getting agent info not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: agent not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve agent info by agent hash
+      tags:
+      - Agents
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: agent hash in hex format (md5)
+        in: path
+        maxLength: 32
+        minLength: 32
+        name: hash
+        required: true
+        type: string
+      - description: agent info as JSON data
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/models.Agent'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: agent info updated successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/private.agent'
+              type: object
+        "400":
+          description: invalid agent info
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "403":
+          description: updating agent info not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: agent not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Update agent info by agent hash
+      tags:
+      - Agents
+  /agents/{hash}/modules:
+    get:
+      parameters:
+      - description: agent hash in hex format (md5)
+        in: path
+        maxLength: 32
+        minLength: 32
+        name: hash
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: agent modules received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/private.agentModules'
+              type: object
+        "403":
+          description: getting agent modules not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: agent or modules not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve agent modules by agent hash
+      tags:
+      - Agents
+      - Modules
+  /agents/{hash}/modules/{module_name}:
+    get:
+      parameters:
+      - description: agent hash in hex format (md5)
+        in: path
+        maxLength: 32
+        minLength: 32
+        name: hash
+        required: true
+        type: string
+      - description: module name without spaces
+        in: path
+        name: module_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: agent module data received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.ModuleA'
+              type: object
+        "403":
+          description: getting agent module data not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: agent or module not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve agent module data by agent hash and module name
+      tags:
+      - Agents
+      - Modules
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: agent hash in hex format (md5)
+        in: path
+        maxLength: 32
+        minLength: 32
+        name: hash
+        required: true
+        type: string
+      - description: module name without spaces
+        in: path
+        name: module_name
+        required: true
+        type: string
+      - description: action on agent module as JSON data (activate, deactivate, store, update)
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/private.agentModulePatch'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: agent module patched successful
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        "403":
+          description: updating agent module not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: agent or module not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error on updating agent module
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Update or patch agent module data by agent hash and module name
+      tags:
+      - Agents
+      - Modules
+  /agents/{hash}/modules/{module_name}/bmodule.vue:
+    get:
+      parameters:
+      - description: agent hash in hex format (md5)
+        in: path
+        maxLength: 32
+        minLength: 32
+        name: hash
+        required: true
+        type: string
+      - description: module name without spaces
+        in: path
+        name: module_name
+        required: true
+        type: string
+      produces:
+      - text/javascript
+      - application/javascript
+      - application/json
+      responses:
+        "200":
+          description: browser module vue code as a file
+          schema:
+            type: file
+        "403":
+          description: getting agent module data not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve browser module vue code by agent hash and module name
+      tags:
+      - Agents
+      - Modules
+  /downloads/vxagent/{os}/{arch}:
+    get:
+      parameters:
+      - default: linux
+        description: agent info OS
+        enum:
+        - windows
+        - linux
+        - darwin
+        in: path
+        name: os
+        required: true
+        type: string
+      - default: amd64
+        description: agent info arch
+        enum:
+        - "386"
+        - amd64
+        in: path
+        name: arch
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      - application/json
+      responses:
+        "200":
+          description: agent binary as a file
+          schema:
+            type: file
+        "400":
+          description: invalid agent info
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "403":
+          description: getting agent binary file not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: agent binary file not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve agent binary file by OS and arch
+      tags:
+      - Public
+      - Downloads
+  /events/:
+    get:
+      parameters:
+      - collectionFormat: multi
+        description: |-
+          Filtering result on server e.g. {"value":[...],"field":"..."}
+            field value should be integer or string or array type
+        in: query
+        items:
+          type: string
+        name: filters[]
+        type: array
+      - default: en
+        description: Language of result data
+        enum:
+        - en
+        - ru
+        in: query
+        name: lang
+        required: true
+        type: string
+      - default: 1
+        description: Number of page (since 1)
+        in: query
+        minimum: 1
+        name: page
+        required: true
+        type: integer
+      - default: 5
+        description: Amount items per page (min 5, max 100)
+        in: query
+        maximum: 100
+        minimum: 5
+        name: pageSize
+        required: true
+        type: integer
+      - default: '{}'
+        description: |-
+          Sorting result on server e.g. {"prop":"...","order":"..."}
+            field order is "ascending" or "descending" value
+        in: query
+        name: sort
+        required: true
+        type: string
+      - default: init
+        description: Type of request
+        enum:
+        - sort
+        - filter
+        - init
+        - page
+        in: query
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: events list received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/private.events'
+              type: object
+        "400":
+          description: invalid event request data
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "403":
+          description: getting events not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: invalid event data or query
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve events list by filters
+      tags:
+      - Events
+  /info:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: info received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/public.info'
+              type: object
+        "403":
+          description: getting info not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: user not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve current user and system settings
+      tags:
+      - Public
+  /modules/:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: system modules received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.ModuleS'
+                  type: array
+              type: object
+        "403":
+          description: getting system modules not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: system modules not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve system modules
+      tags:
+      - Modules
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: module info to create one
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/models.ModuleInfo'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: system module created successful
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        "400":
+          description: invalid system module info
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "403":
+          description: creating system module not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Create new system module from template
+      tags:
+      - Modules
+  /modules/{module_name}:
+    delete:
+      parameters:
+      - description: module name without spaces
+        in: path
+        name: module_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: system module deleted successful
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        "403":
+          description: deleting system module not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: system module not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Delete system module from all DBs and S3 storage
+      tags:
+      - Modules
+    get:
+      parameters:
+      - description: module name without spaces
+        in: path
+        name: module_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: system module data received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.ModuleS'
+              type: object
+        "403":
+          description: getting system module data not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: system module not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve system module data by module name
+      tags:
+      - Modules
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: module info to create one
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/models.ModuleS'
+      - description: module name without spaces
+        in: path
+        name: module_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: system module updated successful
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        "403":
+          description: updating system module not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: system module not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Update current version of system module to global DB and global S3 storage
+      tags:
+      - Modules
+  /modules/{module_name}/files:
+    get:
+      parameters:
+      - description: module name without spaces
+        in: path
+        name: module_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: system module files received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+        "403":
+          description: getting system module files not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: system module not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve system module files (relative path) by module name
+      tags:
+      - Modules
+  /modules/{module_name}/files/file:
+    get:
+      parameters:
+      - description: module name without spaces
+        in: path
+        name: module_name
+        required: true
+        type: string
+      - description: relative path to module file
+        in: query
+        name: path
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: system module file content received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/private.systemModuleFile'
+              type: object
+        "403":
+          description: getting system module file content not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: system module not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve system module file content (in base64) by module name and relative path
+      tags:
+      - Modules
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: module name without spaces
+        in: path
+        name: module_name
+        required: true
+        type: string
+      - description: action, relative path and file content for module file
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/private.systemModuleFilePatch'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: action on system module file did successful
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        "403":
+          description: action on system module file not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: system module not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Patch system module file and content (in base64) by module name and relative path
+      tags:
+      - Modules
+  /modules/{module_name}/options/{option_name}:
+    get:
+      parameters:
+      - description: module name without spaces
+        in: path
+        name: module_name
+        required: true
+        type: string
+      - description: module option without spaces
+        enum:
+        - id
+        - service_type
+        - tenant_id
+        - config_schema
+        - default_config
+        - event_data_schema
+        - event_config_schema
+        - default_event_config
+        - changelog
+        - locale
+        - info
+        - last_update
+        - definitions
+        in: path
+        name: option_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: module option received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "403":
+          description: getting module option not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: system module not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve rendered Event Config Schema of system module data by module name
+      tags:
+      - Modules
+  /signin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Sign In form JSON data
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: login successful
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        "400":
+          description: invalid login data
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "401":
+          description: invalid login or password
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "403":
+          description: login not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Login user into system
+      tags:
+      - Public
+  /signup:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Sign Up form JSON data
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignUp'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: register successful
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        "400":
+          description: invalid registration data
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "403":
+          description: register not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: couldn't perform insert in DB
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Register user into system
+      tags:
+      - Public
+  /users/current:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: user info received successful
+          schema:
+            allOf:
+            - $ref: '#/definitions/SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.UserGroup'
+              type: object
+        "403":
+          description: getting user not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: user not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Retrieve current user information
+      tags:
+      - Users
+  /users/current/password:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: container to validate and update account password
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/models.Password'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: account password updated successful
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        "400":
+          description: account password form data invalid
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "403":
+          description: updating account password not permitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: internal error on updating account password
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Update password for current user (account)
+      tags:
+      - Users
+swagger: "2.0"

@@ -1,0 +1,18 @@
+{
+    "App.Menu.Item.Account": "Account",
+    "App.Menu.Item.Agent": "Agent",
+    "App.Menu.Item.Agents": "Agents",
+    "App.Menu.Item.Edit": "Edit",
+    "App.Menu.Item.Events": "Events",
+    "App.Menu.Item.Info": "Information",
+    "App.Menu.Item.List": "List",
+    "App.Menu.Item.Logout": "Logout",
+    "App.Menu.Item.Module": "Module",
+    "App.Menu.Item.Modules": "Modules",
+    "App.Menu.Item.Overview": "Overview",
+    "App.Menu.SelectItem.English": "English",
+    "App.Menu.SelectItem.Russian": "Русский",
+    "App.Menu.Title.Menu": "Menu",
+    "App.Navbar.Item.Account": "Account",
+    "App.Navbar.Item.Dashboard": "Dashboard"
+}

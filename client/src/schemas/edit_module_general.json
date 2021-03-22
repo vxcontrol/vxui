@@ -1,0 +1,197 @@
+{
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "ui": {
+                "label": "ID",
+                "description": "Module ID",
+                "disabled": true,
+                "readonly": true
+            },
+            "rules": {}
+        },
+        "template": {
+            "type": "string",
+            "default": "generic",
+            "ui": {
+                "widget": "select",
+                "label": "Template",
+                "description": "Module based on this template",
+                "readonly": true,
+                "widgetConfig": {
+                    "clearable": false,
+                    "enumSource": [
+                        {
+                            "label": "Generic",
+                            "value": "generic"
+                        },
+                        {
+                            "label": "Empty",
+                            "value": "empty"
+                        },
+                        {
+                            "label": "Custom",
+                            "value": "custom"
+                        }
+                    ]
+                }
+            },
+            "rules": {}
+        },
+        "system": {
+            "type": "boolean",
+            "ui": {
+                "widget": "checkbox",
+                "label": "System",
+                "description": "Is module system",
+                "disabled": true,
+                "readonly": true,
+                "hidden": true
+            },
+            "rules": {}
+        },
+        "version": {
+            "type": "string",
+            "ui": {
+                "label": "Version",
+                "description": "Module version in semver format",
+                "disabled": true,
+                "readonly": true
+            },
+            "rules": {}
+        },
+        "os": {
+            "type": "object",
+            "default": [
+                "windows.386",
+                "windows.amd64",
+                "linux.386",
+                "linux.amd64",
+                "darwin.386",
+                "darwin.amd64"
+            ],
+            "items": {
+                "type": "string"
+            },
+            "ui": {
+                "widget": "select",
+                "label": "Supported OS",
+                "description": "Please choose supported OS and Architecture list",
+                "widgetConfig": {
+                    "clearable": true,
+                    "grouping": true,
+                    "multiple": true,
+                    "itemTemplate": "<span>{{item.labelShort}}</span>",
+                    "enumSource": [
+                        {
+                            "label": "windows",
+                            "options": [
+                                {
+                                    "value": "windows.386",
+                                    "label": "Win 386",
+                                    "labelShort": "386"
+                                },
+                                {
+                                    "value": "windows.amd64",
+                                    "label": "Win amd64",
+                                    "labelShort": "amd64"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "linux",
+                            "options": [
+                                {
+                                    "value": "linux.386",
+                                    "label": "Linux 386",
+                                    "labelShort": "386"
+                                },
+                                {
+                                    "value": "linux.amd64",
+                                    "label": "Linux amd64",
+                                    "labelShort": "amd64"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "darwin",
+                            "options": [
+                                {
+                                    "value": "darwin.386",
+                                    "label": "OS X 386",
+                                    "labelShort": "386"
+                                },
+                                {
+                                    "value": "darwin.amd64",
+                                    "label": "OS X amd64",
+                                    "labelShort": "amd64"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "rules": {
+                "required": {
+                    "value": true,
+                    "errMsg": "Is required field"
+                }
+            }
+        },
+        "events": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "ui": {
+                "widget": "select",
+                "label": "Events",
+                "description": "Module event IDs list",
+                "disabled": false,
+                "readonly": true,
+                "widgetConfig": {
+                    "multiple": true,
+                    "clearable": false
+                }
+            },
+            "rules": {}
+        },
+        "tags": {
+            "type": "array",
+            "ui": {
+                "widget": "select",
+                "label": "Tags",
+                "description": "Please type list of tag IDs without spaces",
+                "placeholder": "new_module_tag_id",
+                "widgetConfig": {
+                    "multiple": true,
+                    "allowCreate": true,
+                    "filterable": true,
+                    "clearable": false,
+                    "defaultFirstOption": true,
+                    "enumSource": [
+                        {
+                            "value": "my_tag_id"
+                        }
+                    ]
+                }
+            },
+            "rules": {
+                "customRule": [
+                    {
+                        "script": "dx: !({{$root.tags}}.map((val, idx) => !!(val.match(/[^a-z0-9_]/))).includes(true))",
+                        "errMsg": "Tag ID must contain alpha numeric charset lowercase, use '_' instead of space"
+                    }
+                ]
+            }
+        }
+    },
+    "ui": {
+        "showLegend": false,
+        "widgetConfig": {
+            "layout": "h",
+            "labelWidth": "130px"
+        }
+    }
+}

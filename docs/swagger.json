@@ -1,0 +1,2318 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Swagger API for VXControl backend product.",
+        "title": "VXUI Swagger API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Dmitry Nagibin",
+            "url": "https://vxcontrol.com",
+            "email": "admin@vxcontrol.com"
+        },
+        "license": {
+            "name": "Proprietary License",
+            "url": "https://github.com/vxcontrol/vxui/src/master/LICENSE"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/agents/": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Agents"
+                ],
+                "summary": "Retrieve agents list",
+                "responses": {
+                    "200": {
+                        "description": "agents list received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/private.agents"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "getting agents not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agents not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Agents"
+                ],
+                "summary": "Create new agent in service",
+                "parameters": [
+                    {
+                        "description": "agent info to create one",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/private.agentInfo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "agent created successful",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid agent info",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "creating agent not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/agents/{hash}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Agents"
+                ],
+                "summary": "Retrieve agent info by agent hash",
+                "parameters": [
+                    {
+                        "maxLength": 32,
+                        "minLength": 32,
+                        "type": "string",
+                        "description": "agent hash in hex format (md5)",
+                        "name": "hash",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "agent info received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/private.agent"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "getting agent info not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Agents"
+                ],
+                "summary": "Update agent info by agent hash",
+                "parameters": [
+                    {
+                        "maxLength": 32,
+                        "minLength": 32,
+                        "type": "string",
+                        "description": "agent hash in hex format (md5)",
+                        "name": "hash",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "agent info as JSON data",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Agent"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "agent info updated successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/private.agent"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "invalid agent info",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "updating agent info not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Agents"
+                ],
+                "summary": "Delete agent from instance DB",
+                "parameters": [
+                    {
+                        "maxLength": 32,
+                        "minLength": 32,
+                        "type": "string",
+                        "description": "agent hash in hex format (md5)",
+                        "name": "hash",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "agent deleted successful",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "deleting agent not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/agents/{hash}/modules": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Agents",
+                    "Modules"
+                ],
+                "summary": "Retrieve agent modules by agent hash",
+                "parameters": [
+                    {
+                        "maxLength": 32,
+                        "minLength": 32,
+                        "type": "string",
+                        "description": "agent hash in hex format (md5)",
+                        "name": "hash",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "agent modules received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/private.agentModules"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "getting agent modules not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent or modules not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/agents/{hash}/modules/{module_name}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Agents",
+                    "Modules"
+                ],
+                "summary": "Retrieve agent module data by agent hash and module name",
+                "parameters": [
+                    {
+                        "maxLength": 32,
+                        "minLength": 32,
+                        "type": "string",
+                        "description": "agent hash in hex format (md5)",
+                        "name": "hash",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "module name without spaces",
+                        "name": "module_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "agent module data received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.ModuleA"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "getting agent module data not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent or module not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Agents",
+                    "Modules"
+                ],
+                "summary": "Update or patch agent module data by agent hash and module name",
+                "parameters": [
+                    {
+                        "maxLength": 32,
+                        "minLength": 32,
+                        "type": "string",
+                        "description": "agent hash in hex format (md5)",
+                        "name": "hash",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "module name without spaces",
+                        "name": "module_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "action on agent module as JSON data (activate, deactivate, store, update)",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/private.agentModulePatch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "agent module patched successful",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "updating agent module not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent or module not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error on updating agent module",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/agents/{hash}/modules/{module_name}/bmodule.vue": {
+            "get": {
+                "produces": [
+                    "text/javascript",
+                    "application/javascript",
+                    "application/json"
+                ],
+                "tags": [
+                    "Agents",
+                    "Modules"
+                ],
+                "summary": "Retrieve browser module vue code by agent hash and module name",
+                "parameters": [
+                    {
+                        "maxLength": 32,
+                        "minLength": 32,
+                        "type": "string",
+                        "description": "agent hash in hex format (md5)",
+                        "name": "hash",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "module name without spaces",
+                        "name": "module_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "browser module vue code as a file",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "403": {
+                        "description": "getting agent module data not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/downloads/vxagent/{os}/{arch}": {
+            "get": {
+                "produces": [
+                    "application/octet-stream",
+                    "application/json"
+                ],
+                "tags": [
+                    "Public",
+                    "Downloads"
+                ],
+                "summary": "Retrieve agent binary file by OS and arch",
+                "parameters": [
+                    {
+                        "enum": [
+                            "windows",
+                            "linux",
+                            "darwin"
+                        ],
+                        "type": "string",
+                        "default": "linux",
+                        "description": "agent info OS",
+                        "name": "os",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "386",
+                            "amd64"
+                        ],
+                        "type": "string",
+                        "default": "amd64",
+                        "description": "agent info arch",
+                        "name": "arch",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "agent binary as a file",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid agent info",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "getting agent binary file not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "agent binary file not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/events/": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Retrieve events list by filters",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "Filtering result on server e.g. {\"value\":[...],\"field\":\"...\"}\n  field value should be integer or string or array type",
+                        "name": "filters[]",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "en",
+                            "ru"
+                        ],
+                        "type": "string",
+                        "default": "en",
+                        "description": "Language of result data",
+                        "name": "lang",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Number of page (since 1)",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 5,
+                        "type": "integer",
+                        "default": 5,
+                        "description": "Amount items per page (min 5, max 100)",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "{}",
+                        "description": "Sorting result on server e.g. {\"prop\":\"...\",\"order\":\"...\"}\n  field order is \"ascending\" or \"descending\" value",
+                        "name": "sort",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "sort",
+                            "filter",
+                            "init",
+                            "page"
+                        ],
+                        "type": "string",
+                        "default": "init",
+                        "description": "Type of request",
+                        "name": "type",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "events list received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/private.events"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "invalid event request data",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "getting events not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "invalid event data or query",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/info": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Public"
+                ],
+                "summary": "Retrieve current user and system settings",
+                "responses": {
+                    "200": {
+                        "description": "info received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/public.info"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "getting info not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "user not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/modules/": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Modules"
+                ],
+                "summary": "Retrieve system modules",
+                "responses": {
+                    "200": {
+                        "description": "system modules received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.ModuleS"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "getting system modules not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "system modules not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Modules"
+                ],
+                "summary": "Create new system module from template",
+                "parameters": [
+                    {
+                        "description": "module info to create one",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ModuleInfo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "system module created successful",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid system module info",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "creating system module not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/modules/{module_name}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Modules"
+                ],
+                "summary": "Retrieve system module data by module name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "module name without spaces",
+                        "name": "module_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "system module data received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.ModuleS"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "getting system module data not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "system module not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Modules"
+                ],
+                "summary": "Update current version of system module to global DB and global S3 storage",
+                "parameters": [
+                    {
+                        "description": "module info to create one",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ModuleS"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "module name without spaces",
+                        "name": "module_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "system module updated successful",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "updating system module not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "system module not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Modules"
+                ],
+                "summary": "Delete system module from all DBs and S3 storage",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "module name without spaces",
+                        "name": "module_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "system module deleted successful",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "deleting system module not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "system module not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/modules/{module_name}/files": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Modules"
+                ],
+                "summary": "Retrieve system module files (relative path) by module name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "module name without spaces",
+                        "name": "module_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "system module files received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "getting system module files not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "system module not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/modules/{module_name}/files/file": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Modules"
+                ],
+                "summary": "Retrieve system module file content (in base64) by module name and relative path",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "module name without spaces",
+                        "name": "module_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "relative path to module file",
+                        "name": "path",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "system module file content received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/private.systemModuleFile"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "getting system module file content not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "system module not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Modules"
+                ],
+                "summary": "Patch system module file and content (in base64) by module name and relative path",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "module name without spaces",
+                        "name": "module_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "action, relative path and file content for module file",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/private.systemModuleFilePatch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "action on system module file did successful",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "action on system module file not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "system module not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/modules/{module_name}/options/{option_name}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Modules"
+                ],
+                "summary": "Retrieve rendered Event Config Schema of system module data by module name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "module name without spaces",
+                        "name": "module_name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "id",
+                            "service_type",
+                            "tenant_id",
+                            "config_schema",
+                            "default_config",
+                            "event_data_schema",
+                            "event_config_schema",
+                            "default_event_config",
+                            "changelog",
+                            "locale",
+                            "info",
+                            "last_update",
+                            "definitions"
+                        ],
+                        "type": "string",
+                        "description": "module option without spaces",
+                        "name": "option_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "module option received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "getting module option not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "system module not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/signin": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Public"
+                ],
+                "summary": "Login user into system",
+                "parameters": [
+                    {
+                        "description": "Sign In form JSON data",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SignIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "login successful",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid login data",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "invalid login or password",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "login not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/signup": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Public"
+                ],
+                "summary": "Register user into system",
+                "parameters": [
+                    {
+                        "description": "Sign Up form JSON data",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SignUp"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "register successful",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid registration data",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "register not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "couldn't perform insert in DB",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/current": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Retrieve current user information",
+                "responses": {
+                    "200": {
+                        "description": "user info received successful",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.UserGroup"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "getting user not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "user not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/current/password": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update password for current user (account)",
+                "parameters": [
+                    {
+                        "description": "container to validate and update account password",
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Password"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "account password updated successful",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "account password form data invalid",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "updating account password not permitted",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal error on updating account password",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "msg": {
+                    "type": "string",
+                    "example": "error message text"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "models.Agent": {
+            "type": "object",
+            "required": [
+                "description",
+                "hash",
+                "info",
+                "ip",
+                "status"
+            ],
+            "properties": {
+                "connected_date": {
+                    "type": "string"
+                },
+                "created_date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "hash": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "info": {
+                    "$ref": "#/definitions/models.AgentInfo"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AgentInfo": {
+            "type": "object",
+            "required": [
+                "os",
+                "user"
+            ],
+            "properties": {
+                "os": {
+                    "$ref": "#/definitions/models.AgentOS"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.AgentUser"
+                }
+            }
+        },
+        "models.AgentOS": {
+            "type": "object",
+            "required": [
+                "arch",
+                "name",
+                "type"
+            ],
+            "properties": {
+                "arch": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AgentUser": {
+            "type": "object",
+            "required": [
+                "group",
+                "name"
+            ],
+            "properties": {
+                "group": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Changelog": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "#/definitions/models.ChangelogDesc"
+                }
+            }
+        },
+        "models.ChangelogDesc": {
+            "type": "object",
+            "required": [
+                "date",
+                "description",
+                "title"
+            ],
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Event": {
+            "type": "object",
+            "required": [
+                "info"
+            ],
+            "properties": {
+                "agent_id": {
+                    "type": "integer"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "info": {
+                    "$ref": "#/definitions/models.EventInfo"
+                },
+                "module_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.EventConfig": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/models.EventConfigItem"
+            }
+        },
+        "models.EventConfigAction": {
+            "type": "object",
+            "required": [
+                "name",
+                "type"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.EventConfigItem": {
+            "type": "object",
+            "required": [
+                "actions",
+                "seq",
+                "type"
+            ],
+            "properties": {
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.EventConfigAction"
+                    }
+                },
+                "group_by": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "max_count": {
+                    "type": "integer"
+                },
+                "max_time": {
+                    "type": "integer"
+                },
+                "seq": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.EventConfigSeq"
+                    }
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.EventConfigSeq": {
+            "type": "object",
+            "required": [
+                "min_count",
+                "name"
+            ],
+            "properties": {
+                "min_count": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.EventInfo": {
+            "type": "object",
+            "required": [
+                "data",
+                "name",
+                "uniq"
+            ],
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "name": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "integer"
+                },
+                "uniq": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Group": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Locale": {
+            "type": "object",
+            "required": [
+                "config",
+                "event_config",
+                "event_data",
+                "events",
+                "module",
+                "tags"
+            ],
+            "properties": {
+                "config": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/models.LocaleDesc"
+                        }
+                    }
+                },
+                "event_config": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "$ref": "#/definitions/models.LocaleDesc"
+                            }
+                        }
+                    }
+                },
+                "event_data": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/models.LocaleDesc"
+                        }
+                    }
+                },
+                "events": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/models.LocaleDesc"
+                        }
+                    }
+                },
+                "module": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/models.LocaleDesc"
+                    }
+                },
+                "tags": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/models.LocaleDesc"
+                        }
+                    }
+                }
+            }
+        },
+        "models.LocaleDesc": {
+            "type": "object",
+            "required": [
+                "description",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ModuleA": {
+            "type": "object",
+            "required": [
+                "changelog",
+                "config_schema",
+                "current_config",
+                "current_event_config",
+                "default_config",
+                "default_event_config",
+                "event_config_schema",
+                "event_data_schema",
+                "info",
+                "locale",
+                "status"
+            ],
+            "properties": {
+                "agent_id": {
+                    "type": "integer"
+                },
+                "changelog": {
+                    "$ref": "#/definitions/models.Changelog"
+                },
+                "config_schema": {
+                    "type": "object"
+                },
+                "current_config": {
+                    "$ref": "#/definitions/models.ModuleConfig"
+                },
+                "current_event_config": {
+                    "$ref": "#/definitions/models.EventConfig"
+                },
+                "default_config": {
+                    "$ref": "#/definitions/models.ModuleConfig"
+                },
+                "default_event_config": {
+                    "$ref": "#/definitions/models.EventConfig"
+                },
+                "event_config_schema": {
+                    "type": "object"
+                },
+                "event_data_schema": {
+                    "type": "object"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "info": {
+                    "$ref": "#/definitions/models.ModuleInfo"
+                },
+                "join_date": {
+                    "type": "string"
+                },
+                "last_update": {
+                    "type": "string"
+                },
+                "locale": {
+                    "$ref": "#/definitions/models.Locale"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ModuleConfig": {
+            "type": "object",
+            "additionalProperties": true
+        },
+        "models.ModuleInfo": {
+            "type": "object",
+            "required": [
+                "name",
+                "os",
+                "template",
+                "version"
+            ],
+            "properties": {
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "os": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "system": {
+                    "type": "boolean"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "template": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ModuleS": {
+            "type": "object",
+            "required": [
+                "changelog",
+                "config_schema",
+                "default_config",
+                "default_event_config",
+                "event_config_schema",
+                "event_data_schema",
+                "info",
+                "locale"
+            ],
+            "properties": {
+                "changelog": {
+                    "$ref": "#/definitions/models.Changelog"
+                },
+                "config_schema": {
+                    "type": "object"
+                },
+                "default_config": {
+                    "$ref": "#/definitions/models.ModuleConfig"
+                },
+                "default_event_config": {
+                    "$ref": "#/definitions/models.EventConfig"
+                },
+                "event_config_schema": {
+                    "type": "object"
+                },
+                "event_data_schema": {
+                    "type": "object"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "info": {
+                    "$ref": "#/definitions/models.ModuleInfo"
+                },
+                "last_update": {
+                    "type": "string"
+                },
+                "locale": {
+                    "$ref": "#/definitions/models.Locale"
+                },
+                "service_type": {
+                    "type": "string"
+                },
+                "tenant_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Password": {
+            "type": "object",
+            "required": [
+                "current_password",
+                "password"
+            ],
+            "properties": {
+                "confirm_password": {
+                    "type": "string"
+                },
+                "current_password": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ServiceInfoServer": {
+            "type": "object",
+            "required": [
+                "host",
+                "port"
+            ],
+            "properties": {
+                "host": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.SignIn": {
+            "type": "object",
+            "required": [
+                "mail",
+                "password"
+            ],
+            "properties": {
+                "mail": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SignUp": {
+            "type": "object",
+            "required": [
+                "mail",
+                "password"
+            ],
+            "properties": {
+                "confirm_password": {
+                    "type": "string"
+                },
+                "mail": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Tenant": {
+            "type": "object",
+            "required": [
+                "status"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "required": [
+                "mail",
+                "status"
+            ],
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "mail": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tenant_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.UserGroup": {
+            "type": "object",
+            "required": [
+                "mail",
+                "status"
+            ],
+            "properties": {
+                "group": {
+                    "$ref": "#/definitions/models.Group"
+                },
+                "group_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "mail": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tenant_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "private.agent": {
+            "type": "object",
+            "properties": {
+                "agent": {
+                    "$ref": "#/definitions/models.Agent"
+                },
+                "details": {
+                    "$ref": "#/definitions/private.agentDetails"
+                }
+            }
+        },
+        "private.agentDetails": {
+            "type": "object",
+            "properties": {
+                "active_modules": {
+                    "type": "integer"
+                },
+                "events_per_last_day": {
+                    "type": "integer"
+                },
+                "hash": {
+                    "type": "string"
+                }
+            }
+        },
+        "private.agentInfo": {
+            "type": "object",
+            "required": [
+                "arch",
+                "name",
+                "os"
+            ],
+            "properties": {
+                "arch": {
+                    "type": "string",
+                    "default": "amd64",
+                    "enum": [
+                        "386",
+                        "amd64"
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                },
+                "os": {
+                    "type": "string",
+                    "default": "linux",
+                    "enum": [
+                        "windows",
+                        "linux",
+                        "darwin"
+                    ]
+                }
+            }
+        },
+        "private.agentModuleDetails": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "today": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "update": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "private.agentModulePatch": {
+            "type": "object",
+            "required": [
+                "action"
+            ],
+            "properties": {
+                "action": {
+                    "description": "Action on agent module must be one of activate, deactivate, update, store",
+                    "type": "string",
+                    "default": "update",
+                    "enum": [
+                        "activate",
+                        "deactivate",
+                        "store",
+                        "update"
+                    ]
+                },
+                "module": {
+                    "$ref": "#/definitions/models.ModuleA"
+                }
+            }
+        },
+        "private.agentModules": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/private.agentModuleDetails"
+                    }
+                },
+                "modules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ModuleA"
+                    }
+                }
+            }
+        },
+        "private.agents": {
+            "type": "object",
+            "properties": {
+                "agents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Agent"
+                    }
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/private.agentDetails"
+                    }
+                }
+            }
+        },
+        "private.events": {
+            "type": "object",
+            "properties": {
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Event"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "private.systemModuleFile": {
+            "type": "object",
+            "required": [
+                "data",
+                "path"
+            ],
+            "properties": {
+                "data": {
+                    "type": "string",
+                    "default": "base64"
+                },
+                "path": {
+                    "type": "string"
+                }
+            }
+        },
+        "private.systemModuleFilePatch": {
+            "type": "object",
+            "required": [
+                "action",
+                "path"
+            ],
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "default": "save",
+                    "enum": [
+                        "move",
+                        "remove",
+                        "save"
+                    ]
+                },
+                "data": {
+                    "type": "string",
+                    "default": "base64"
+                },
+                "newpath": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                }
+            }
+        },
+        "public.info": {
+            "type": "object",
+            "properties": {
+                "group": {
+                    "$ref": "#/definitions/models.Group"
+                },
+                "recaptcha_html_key": {
+                    "type": "string"
+                },
+                "server": {
+                    "$ref": "#/definitions/models.ServiceInfoServer"
+                },
+                "tenant": {
+                    "$ref": "#/definitions/models.Tenant"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                }
+            }
+        }
+    }
+}

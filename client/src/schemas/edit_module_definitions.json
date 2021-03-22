@@ -1,0 +1,436 @@
+{
+    "actions": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "default": "log_to_db",
+                    "enum": [
+                        "log_to_db"
+                    ],
+                    "ui": {},
+                    "rules": {}
+                },
+                "type": {
+                    "type": "string",
+                    "default": "db",
+                    "enum": [
+                        "db"
+                    ],
+                    "ui": {},
+                    "rules": {}
+                }
+            },
+            "required": [
+                "type",
+                "name"
+            ],
+            "additionalProperties": false,
+            "ui": {},
+            "rules": {}
+        },
+        "ui": {
+            "widget": "select",
+            "showIdxLabel": false,
+            "widgetConfig": {
+                "valueKey": "name",
+                "multiple": true,
+                "collapsed": true,
+                "itemCollapse": true,
+                "disableReorder": true,
+                "requiredDelConfirm": true,
+                "enumSource": [
+                    {
+                        "label": "Log to DB",
+                        "value": {
+                            "name": "log_to_db",
+                            "type": "db"
+                        }
+                    }
+                ]
+            }
+        },
+        "rules": {}
+    },
+    "types.atomic": {
+        "type": "string",
+        "default": "atomic",
+        "enum": [
+            "atomic"
+        ],
+        "ui": {
+            "widget": "select",
+            "readonly": true,
+            "widgetConfig": {
+                "clearable": false,
+                "enumSource": [
+                    {
+                        "value": "atomic"
+                    }
+                ]
+            }
+        },
+        "rules": {}
+    },
+    "types.aggregation": {
+        "type": "string",
+        "default": "aggregation",
+        "enum": [
+            "aggregation"
+        ],
+        "ui": {
+            "widget": "select",
+            "readonly": true,
+            "widgetConfig": {
+                "clearable": false,
+                "enumSource": [
+                    {
+                        "value": "aggregation"
+                    }
+                ]
+            }
+        },
+        "rules": {}
+    },
+    "types.correlation": {
+        "type": "string",
+        "default": "correlation",
+        "enum": [
+            "correlation"
+        ],
+        "ui": {
+            "widget": "select",
+            "readonly": true,
+            "widgetConfig": {
+                "clearable": false,
+                "enumSource": [
+                    {
+                        "value": "correlation"
+                    }
+                ]
+            }
+        },
+        "rules": {}
+    },
+    "events.atomic": {
+        "type": "object",
+        "properties": {
+            "type": {
+                "$ref": "#/definitions/types.atomic"
+            },
+            "actions": {
+                "$ref": "#/definitions/actions"
+            }
+        },
+        "required": [
+            "type",
+            "actions"
+        ],
+        "ui": {
+            "showLabel": false,
+            "noLabelSpace": true,
+            "widgetConfig": {
+                "collapsed": true
+            }
+        },
+        "rules": {}
+    },
+    "events.complex": {
+        "type": "object",
+        "properties": {
+            "type": {},
+            "seq": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "$ref": "#/definitions/events.ids",
+                            "ui": {
+                                "linkFields": [
+                                    {
+                                        "fieldPath": "dx: {{$path}}.split('[').slice(0,-1).join('[')",
+                                        "rules": [
+                                            "minItems",
+                                            "maxItems",
+                                            "customRule"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "rules": {
+                                "required": {
+                                    "value": true,
+                                    "errMsg": "Is required field"
+                                },
+                                "customRule": [
+                                    {
+                                        "script": "dx: !{{$path}}.includes(__get({{$root}}, {{$path}}))",
+                                        "errMsg": "Event ID in the sequence must be difference between this event ID"
+                                    }
+                                ]
+                            }
+                        },
+                        "min_count": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "rules": {
+                                "minimum": {
+                                    "value": 1,
+                                    "errMsg": "Min count must be positive number (events amount)"
+                                },
+                                "required": {
+                                    "value": true,
+                                    "errMsg": "Is required field"
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "min_count"
+                    ],
+                    "additionalProperties": false,
+                    "ui": {
+                        "label": "dx: __get({{$root}}, {{$path}} + '.name') ? __get({{$root}}, {{$path}} + '.name') : 'event_' + (parseInt(idxChain)+1)",
+                        "linkFields": [
+                            {
+                                "fieldPath": "dx: {{$path}}.split('[').slice(0,-1).join('[')",
+                                "rules": [
+                                    "minItems"
+                                ]
+                            }
+                        ]
+                    },
+                    "rules": {}
+                },
+                "ui": {
+                    "showIdxLabel": false,
+                    "widgetConfig": {
+                        "collapsed": true,
+                        "itemCollapse": true,
+                        "requiredDelConfirm": true
+                    }
+                },
+                "rules": {
+                    "minItems": {
+                        "value": 1,
+                        "errMsg": "Event sequence must be contains at least 1 event"
+                    },
+                    "required": {
+                        "value": true,
+                        "errMsg": "Is required field"
+                    },
+                    "customRule": [
+                        {
+                            "script": "dx: ((ids) => { return ids.length === new Set(ids).size })(__get({{$root}}, ({{$path}}.split('.seq')[0] + '.seq')).map(({ name }) => name))",
+                            "errMsg": "Event IDs in the sequence must be unique"
+                        }
+                    ]
+                }
+            },
+            "group_by": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                    "$ref": "#/definitions/events.keys",
+                    "ui": {
+                        "linkFields": [
+                            {
+                                "fieldPath": "dx: {{$path}}.split('[').slice(0,-1).join('[')",
+                                "rules": [
+                                    "minItems",
+                                    "uniqueItems"
+                                ]
+                            }
+                        ]
+                    },
+                    "rules": {
+                        "required": {
+                            "value": true,
+                            "errMsg": "Is required field"
+                        }
+                    }
+                },
+                "ui": {
+                    "showIdxLabel": false,
+                    "widgetConfig": {
+                        "collapsed": true,
+                        "itemCollapse": true,
+                        "disableReorder": true,
+                        "requiredDelConfirm": true
+                    }
+                },
+                "rules": {
+                    "minItems": {
+                        "value": 1,
+                        "errMsg": "Group by must be contains at least 1 event key"
+                    },
+                    "required": {
+                        "value": true,
+                        "errMsg": "Is required field"
+                    },
+                    "uniqueItems": {
+                        "value": true,
+                        "errMsg": "Group by must be contains only unique event keys"
+                    }
+                }
+            },
+            "max_count": {
+                "type": "integer",
+                "minimum": 0,
+                "ui": {},
+                "rules": {
+                    "minimum": {
+                        "value": 0,
+                        "errMsg": "Max count must be positive number or 0 (events amount)"
+                    },
+                    "required": {
+                        "value": true,
+                        "errMsg": "Is required field"
+                    },
+                    "customRule": [
+                        {
+                            "script": "dx: ((max_time, max_count) => max_time !== 0 || max_count !== 0)(__get({{$root}}, {{$path}}.split('.max_count')[0] + '.max_time'), __get({{$root}}, {{$path}}))",
+                            "errMsg": "Event fields max_count and max_time must not be equal 0 both at the time",
+                            "linkItems": [
+                                {
+                                    "fieldPath": "dx: {{$path}}.split('.max_count')[0] + '.max_time'",
+                                    "customRuleIdx": 0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "max_time": {
+                "type": "integer",
+                "minimum": 0,
+                "ui": {},
+                "rules": {
+                    "minimum": {
+                        "value": 0,
+                        "errMsg": "Max time must be positive number or 0 (seconds)"
+                    },
+                    "required": {
+                        "value": true,
+                        "errMsg": "Is required field"
+                    },
+                    "customRule": [
+                        {
+                            "script": "dx: ((max_time, max_count) => max_time !== 0 || max_count !== 0)(__get({{$root}}, {{$path}}), __get({{$root}}, {{$path}}.split('.max_time')[0] + '.max_count'))",
+                            "errMsg": "Event fields max_time and max_count must not be equal 0 both at the time",
+                            "linkItems": [
+                                {
+                                    "fieldPath": "dx: {{$path}}.split('.max_time')[0] + '.max_count'",
+                                    "customRuleIdx": 0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "actions": {
+                "$ref": "#/definitions/actions"
+            }
+        },
+        "required": [
+            "type",
+            "seq",
+            "group_by",
+            "max_count",
+            "max_time",
+            "actions"
+        ],
+        "additionalProperties": false,
+        "ui": {
+            "showLabel": false,
+            "noLabelSpace": true,
+            "widgetConfig": {
+                "collapsed": true
+            }
+        },
+        "rules": {}
+    },
+    "events.aggregation": {
+        "allOf": [
+            {
+                "$ref": "#/definitions/events.complex"
+            },
+            {
+                "properties": {
+                    "type": {
+                        "$ref": "#/definitions/types.aggregation"
+                    },
+                    "seq": {
+                        "maxItems": 1,
+                        "rules": {
+                            "maxItems": {
+                                "value": 1,
+                                "errMsg": "Aggregation sequence must be contains 1 event only"
+                            }
+                        }
+                    }
+                },
+                "required": [
+                    "type",
+                    "seq"
+                ]
+            }
+        ]
+    },
+    "events.correlation": {
+        "allOf": [
+            {
+                "$ref": "#/definitions/events.complex"
+            },
+            {
+                "properties": {
+                    "type": {
+                        "$ref": "#/definitions/types.correlation"
+                    },
+                    "seq": {
+                        "maxItems": 20,
+                        "rules": {
+                            "maxItems": {
+                                "value": 20,
+                                "errMsg": "Correlation sequence must be contains max 20 event"
+                            }
+                        }
+                    }
+                },
+                "required": [
+                    "type",
+                    "seq"
+                ]
+            }
+        ]
+    },
+    "events.ids": {
+        "type": "string",
+        "enum": [],
+        "ui": {
+            "widget": "select",
+            "widgetConfig": {
+                "clearable": false,
+                "enumSource": []
+            }
+        }
+    },
+    "events.keys": {
+        "type": "string",
+        "enum": [],
+        "ui": {
+            "widget": "select",
+            "label": "dx: ((key, idx) => key ? key : 'key_' + idx)(__get({{$root}}, {{$path}}), parseInt(idxChain)+1)",
+            "widgetConfig": {
+                "clearable": false,
+                "enumSource": []
+            }
+        }
+    }
+}

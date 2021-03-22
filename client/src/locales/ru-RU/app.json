@@ -1,0 +1,18 @@
+{
+    "App.Menu.Item.Account": "Аккаунт",
+    "App.Menu.Item.Agent": "Агент",
+    "App.Menu.Item.Agents": "Агенты",
+    "App.Menu.Item.Edit": "Редактирование",
+    "App.Menu.Item.Events": "События",
+    "App.Menu.Item.Info": "Информация",
+    "App.Menu.Item.List": "Список",
+    "App.Menu.Item.Logout": "Выйти",
+    "App.Menu.Item.Module": "Модуль",
+    "App.Menu.Item.Modules": "Модули",
+    "App.Menu.Item.Overview": "Обзор",
+    "App.Menu.SelectItem.English": "English",
+    "App.Menu.SelectItem.Russian": "Русский",
+    "App.Menu.Title.Menu": "Меню",
+    "App.Navbar.Item.Account": "Аккаунт",
+    "App.Navbar.Item.Dashboard": "Панель управления"
+}

@@ -1,0 +1,117 @@
+{
+    "type": "object",
+    "definitions": {
+        "title": {
+            "type": "string",
+            "ui": {},
+            "rules": {
+                "required": true
+            }
+        },
+        "description": {
+            "type": "string",
+            "ui": {
+                "widget": "textarea"
+            },
+            "rules": {
+                "required": true
+            }
+        },
+        "overview": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "$ref": "#/definitions/title"
+                },
+                "description": {
+                    "$ref": "#/definitions/description"
+                }
+            },
+            "ui": {
+                "showLegend": false
+            },
+            "rules": {}
+        },
+        "locale": {
+            "type": "object",
+            "properties": {
+                "en": {
+                    "$ref": "#/definitions/overview"
+                },
+                "ru": {
+                    "$ref": "#/definitions/overview"
+                }
+            },
+            "ui": {
+                "showLabel": true,
+                "showLegend": true,
+                "widgetConfig": {
+                    "collapsed": true
+                }
+            },
+            "rules": {}
+        },
+        "group": {
+            "type": "object",
+            "ui": {
+                "showLabel": true,
+                "showLegend": true,
+                "widgetConfig": {
+                    "collapsed": true
+                }
+            }
+        }
+    },
+    "properties": {
+        "module": {
+            "$ref": "#/definitions/locale",
+            "ui": {
+                "label": "Module",
+                "legend": "Module locale"
+            }
+        },
+        "config": {
+            "$ref": "#/definitions/group",
+            "properties": {},
+            "ui": {
+                "label": "Config",
+                "legend": "Config locale"
+            }
+        },
+        "events": {
+            "$ref": "#/definitions/group",
+            "properties": {},
+            "ui": {
+                "label": "Events",
+                "legend": "Events locale"
+            }
+        },
+        "event_config": {
+            "$ref": "#/definitions/group",
+            "properties": {},
+            "ui": {
+                "label": "Events config",
+                "legend": "Events config locale"
+            }
+        },
+        "event_data": {
+            "$ref": "#/definitions/group",
+            "properties": {},
+            "ui": {
+                "label": "Events data",
+                "legend": "Events data locale"
+            }
+        },
+        "tags": {
+            "$ref": "#/definitions/group",
+            "properties": {},
+            "ui": {
+                "label": "Tags",
+                "legend": "Tags locale",
+                "description": "\u200B"
+            }
+        }
+    },
+    "ui": {},
+    "rules": {}
+}

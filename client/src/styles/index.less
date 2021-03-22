@@ -1,0 +1,31 @@
+@import '@vuikit/theme/src/index.less';
+@import 'theme.less';
+@import 'highlight.less';
+
+.page-enter-active,
+.page-leave-active {
+    transition: opacity 0.1s;
+}
+
+.page-enter,
+.page-leave-to {
+    opacity: 0;
+}
+
+.bordered {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+@media (min-width: 1600px) {
+    .uk-container-xsmall {
+        max-width: 960px;
+    }
+
+    .widescreen {
+        display: block;
+    }
+}
+
+.widescreen {
+    display: none;
+}

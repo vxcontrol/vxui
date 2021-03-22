@@ -1,0 +1,54 @@
+{
+    "module": {
+        "ru": {
+            "title": "модуль основанный на generic",
+            "description": "экземпляр модуля для дальнейшей настройки"
+        },
+        "en": {
+            "title": "module based on generic",
+            "description": "module instance for following customization"
+        }
+    },
+    "config": {
+    },
+    "events": {
+        "{{placeholder}}": {
+            "ru": {
+                "title": "{{placeholder}}",
+                "description": "проверка шаблонизатора {{ key }}"
+            },
+            "en": {
+                "title": "{{placeholder}}",
+                "description": "check templater {{ key }}"
+            }
+        }
+    },
+    "event_config": {
+        "{{placeholder}}": {
+        }
+    },
+    "event_data": {
+        "key": {
+            "ru": {
+                "title": "тестовый параметр",
+                "description": "содержит какое-то тестовое значение"
+            },
+            "en": {
+                "title": "test parameter",
+                "description": "contains some kind of test value"
+            }
+        }
+    },
+    "tags": {
+        "{{placeholder}}": {
+            "ru": {
+                "title": "{{placeholder}}",
+                "description": "проверка функциональности по отображению тегов"
+            },
+            "en": {
+                "title": "{{placeholder}}",
+                "description": "testing display of tags function"
+            }
+        }
+    }
+}

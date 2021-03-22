@@ -1,0 +1,98 @@
+{
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "ui": {
+                "label": "Name",
+                "description": "Please type agent name to describe it",
+                "placeholder": "new_agent_name"
+            },
+            "rules": {
+                "required": {
+                    "value": true,
+                    "errMsg": "Is required field"
+                },
+                "minLength": {
+                    "value": 3,
+                    "errMsg": "Too short value"
+                }
+            }
+        },
+        "os": {
+            "type": "object",
+            "rules": {
+                "required": {
+                    "value": true,
+                    "errMsg": "Is required field"
+                }
+            },
+            "default": "linux.amd64",
+            "ui": {
+                "widget": "select",
+                "label": "OS",
+                "description": "Please choose target OS and Architecture list",
+                "widgetConfig": {
+                    "clearable": false,
+                    "grouping": true,
+                    "multiple": false,
+                    "itemTemplate": "<span>{{item.labelShort}}</span>",
+                    "enumSource": [
+                        {
+                            "label": "windows",
+                            "options": [
+                                {
+                                    "value": "windows.386",
+                                    "label": "Win 386",
+                                    "labelShort": "386"
+                                },
+                                {
+                                    "value": "windows.amd64",
+                                    "label": "Win amd64",
+                                    "labelShort": "amd64"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "linux",
+                            "options": [
+                                {
+                                    "value": "linux.386",
+                                    "label": "Linux 386",
+                                    "labelShort": "386"
+                                },
+                                {
+                                    "value": "linux.amd64",
+                                    "label": "Linux amd64",
+                                    "labelShort": "amd64"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "darwin",
+                            "options": [
+                                {
+                                    "value": "darwin.386",
+                                    "label": "OS X 386",
+                                    "labelShort": "386"
+                                },
+                                {
+                                    "value": "darwin.amd64",
+                                    "label": "OS X amd64",
+                                    "labelShort": "amd64"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "ui": {
+        "showLegend": false,
+        "widgetConfig": {
+            "layout": "h",
+            "labelWidth": "130px"
+        }
+    }
+}
